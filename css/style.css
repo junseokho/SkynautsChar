@@ -1,0 +1,536 @@
+
+* {
+box-sizing: border-box;
+}
+
+/* Sky & Machine Theme Color Scheme */
+:root {
+--sky-light: #e8f1ff;
+--sky-main: #0099cc;
+--accent-blue: #00b8e6;
+--sky-dark: #0066aa;
+--machine-dark: #1a1f2e;
+--machine-gray: #374151;
+--machine-light: #e2e8f0;
+/* New radius variables for consistent styling */
+--radius-sm: 6px;
+--radius-md: 10px;
+--radius-lg: 12px;
+}
+
+body {
+font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+margin: 0;
+padding: 0;
+/* Updated background gradient for a softer look */
+background: linear-gradient(135deg, #f8fbff 0%, #f0f7ff 50%, #f8fbff 100%);
+color: var(--machine-dark);
+font-size: 15px;
+font-weight: 400;
+letter-spacing: 0.3px;
+}
+
+h1, h2, h3 {
+font-weight: 700;
+letter-spacing: -0.5px;
+}
+
+h1 {
+font-size: 28px;
+margin: 0 0 8px 0;
+}
+
+header {
+background: linear-gradient(135deg, var(--sky-main) 0%, var(--accent-blue) 100%);
+color: #ffffff;
+/* Increased padding and removed border for a cleaner look */
+padding: 20px 24px;
+border-bottom: none;
+box-shadow: 0 8px 24px rgba(0, 99, 170, 0.15);
+}
+
+header h1 {
+margin: 0;
+/* Slightly larger font size for header */
+font-size: 22px;
+font-weight: 700;
+letter-spacing: 0.5px;
+}
+
+h2 {
+font-size: 18px;
+margin: 0 0 6px 0;
+font-weight: 600;
+}
+
+main {
+max-width: 1000px;
+/* Increased margin for better spacing */
+margin: 32px auto 40px;
+padding: 0 16px;
+}
+
+/* Improved card design with modern shadows and rounded corners */
+.card {
+background-color: #ffffff;
+border-radius: var(--radius-lg);
+padding: 24px;
+box-shadow: 0 2px 8px rgba(0, 99, 170, 0.06), 0 8px 24px rgba(26, 31, 46, 0.08);
+margin-bottom: 20px;
+border: none;
+border-top: 4px solid var(--accent-blue);
+position: relative;
+transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+box-shadow: 0 4px 12px rgba(0, 99, 170, 0.1), 0 12px 32px rgba(26, 31, 46, 0.12);
+}
+
+.card::before {
+content: '';
+position: absolute;
+top: 0;
+right: 0;
+width: 120px;
+height: 120px;
+background: radial-gradient(circle, rgba(0, 184, 230, 0.04) 0%, transparent 70%);
+border-radius: var(--radius-lg) 0 0 0;
+pointer-events: none;
+}
+
+.card h2 {
+margin-top: 0;
+font-size: 18px;
+border-bottom: 2px solid var(--sky-light);
+padding-bottom: 12px;
+margin-bottom: 16px;
+color: var(--sky-main);
+font-weight: 700;
+}
+
+label {
+font-weight: 600;
+font-size: 14px;
+letter-spacing: 0.2px;
+color: var(--machine-dark);
+display: block;
+margin-bottom: 6px;
+}
+
+/* Improved input styling with rounded corners and better focus states */
+input[type="text"],
+textarea,
+select {
+font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+font-size: 14px;
+font-weight: 400;
+width: 100%;
+padding: 10px 12px;
+border-radius: var(--radius-sm);
+border: 2px solid #cbd5e1;
+background-color: #f8fafc;
+transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+outline: none;
+background-color: #ffffff;
+border-color: var(--sky-main);
+box-shadow: 0 0 0 4px rgba(0, 99, 170, 0.12);
+}
+
+textarea {
+resize: vertical;
+min-height: 90px;
+font-family: inherit;
+}
+
+.row {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+margin-bottom: 12px;
+}
+
+.col-2 {
+flex: 1 1 220px;
+}
+
+.field-group {
+margin-bottom: 16px;
+}
+
+.hint {
+font-size: 13px;
+color: #64748b;
+margin-top: 4px;
+line-height: 1.5;
+}
+
+/* Improved badge styling */
+.badge {
+display: inline-block;
+font-size: 11px;
+padding: 5px 10px;
+border-radius: var(--radius-sm);
+background: linear-gradient(135deg, var(--sky-light) 0%, rgba(0, 184, 230, 0.1) 100%);
+color: var(--sky-main);
+margin-left: 6px;
+font-weight: 700;
+border: none;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+}
+
+.section-title {
+font-weight: 600;
+margin-top: 8px;
+margin-bottom: 6px;
+font-size: 14px;
+color: var(--machine-dark);
+}
+
+/* Modern button design with improved hover effects */
+button {
+border-radius: var(--radius-sm);
+border: none;
+padding: 10px 16px;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+background: linear-gradient(135deg, var(--sky-main) 0%, var(--accent-blue) 100%);
+color: #ffffff;
+transition: all 0.2s ease;
+white-space: nowrap;
+position: relative;
+overflow: hidden;
+font-family: 'Noto Sans KR', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+letter-spacing: 0.5px;
+box-shadow: 0 4px 12px rgba(0, 99, 170, 0.2);
+}
+
+button::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: rgba(255, 255, 255, 0.2);
+transition: left 0.3s ease;
+}
+
+button:hover {
+background: linear-gradient(135deg, var(--sky-dark) 0%, var(--sky-main) 100%);
+box-shadow: 0 6px 16px rgba(0, 99, 170, 0.3);
+transform: translateY(-2px);
+}
+
+button:hover::before {
+left: 100%;
+}
+
+button:active {
+transform: translateY(0);
+}
+
+button:disabled {
+background: #cbd5e1;
+cursor: not-allowed;
+box-shadow: none;
+transform: none;
+}
+
+.btn-secondary {
+background: linear-gradient(135deg, #64748b 0%, var(--machine-gray) 100%);
+box-shadow: 0 4px 12px rgba(55, 65, 81, 0.2);
+}
+
+.btn-secondary:hover {
+background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+box-shadow: 0 6px 16px rgba(55, 65, 81, 0.3);
+}
+
+/* Improved skill preview styling */
+.skill-preview {
+font-size: 13px;
+background-color: #f8fafc;
+border-radius: var(--radius-sm);
+padding: 12px 14px;
+border: 2px solid #cbd5e1;
+border-left: 4px solid var(--accent-blue);
+white-space: pre-line;
+font-family: 'JetBrains Mono', monospace;
+line-height: 1.6;
+color: var(--machine-dark);
+font-weight: 500;
+}
+
+.skill-cards-container {
+display: none;
+margin-top: 8px;
+border-radius: var(--radius-md);
+border: 2px solid #cbd5e1;
+border-top: 4px solid var(--sky-main);
+padding: 12px;
+background-color: #f8fafc;
+max-height: 320px;
+overflow: auto;
+}
+
+.skill-category-block {
+margin-bottom: 12px;
+}
+
+.skill-category-title {
+font-weight: 700;
+font-size: 13px;
+margin-bottom: 8px;
+color: var(--sky-main);
+text-transform: uppercase;
+letter-spacing: 0.6px;
+}
+
+.skill-card-list {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+}
+
+/* Modern skill card design */
+.skill-card {
+border-radius: var(--radius-sm);
+border: 2px solid #cbd5e1;
+padding: 6px 12px;
+font-size: 13px;
+background-color: #ffffff;
+cursor: pointer;
+white-space: nowrap;
+transition: all 0.15s ease;
+position: relative;
+font-weight: 500;
+}
+
+.skill-card:hover {
+border-color: var(--sky-main);
+box-shadow: 0 4px 12px rgba(0, 99, 170, 0.2);
+transform: translateY(-2px);
+}
+
+.skill-card.selected {
+background: linear-gradient(135deg, var(--sky-main) 0%, var(--accent-blue) 100%);
+color: #ffffff;
+border-color: var(--sky-dark);
+box-shadow: 0 4px 12px rgba(0, 99, 170, 0.3);
+font-weight: 600;
+}
+
+.danger {
+color: #dc2626;
+font-weight: 600;
+}
+
+.success {
+color: #16a34a;
+font-weight: 600;
+}
+
+/* Improved output area styling */
+.output-area {
+font-family: 'JetBrains Mono', monospace;
+font-size: 12px;
+background-color: #0f172a;
+color: #00e5ff;
+padding: 14px;
+border-radius: var(--radius-sm);
+border: 2px solid #1e293b;
+border-left: 4px solid var(--accent-blue);
+min-height: 240px;
+width: 100%;
+line-height: 1.7;
+font-weight: 400;
+resize: vertical;
+white-space: pre;
+}
+
+.footer-note {
+font-size: 12px;
+color: #64748b;
+margin-top: 8px;
+line-height: 1.6;
+}
+
+.inline-group {
+display: flex;
+gap: 10px;
+align-items: center;
+flex-wrap: wrap;
+}
+
+/* Improved personality slot styling */
+.slot-list {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+
+.personality-slot {
+display: flex;
+gap: 10px;
+align-items: center;
+flex-wrap: wrap;
+padding: 12px 14px;
+border-radius: var(--radius-sm);
+background-color: #f8fafc;
+border: 2px solid #cbd5e1;
+border-left: 4px solid var(--accent-blue);
+transition: all 0.2s ease;
+}
+
+.personality-slot:hover {
+box-shadow: 0 4px 12px rgba(0, 99, 170, 0.1);
+background-color: #f0f7ff;
+border-left-color: var(--sky-main);
+}
+
+.personality-slot-label {
+font-size: 12px;
+font-weight: 700;
+padding: 5px 10px;
+border-radius: var(--radius-sm);
+background: linear-gradient(135deg, var(--sky-light) 0%, rgba(0, 184, 230, 0.1) 100%);
+color: var(--sky-main);
+border: none;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+}
+
+.personality-slot-text {
+font-size: 13px;
+flex: 1 1 auto;
+min-width: 180px;
+color: var(--machine-dark);
+font-weight: 500;
+}
+
+/* 태블릿 이하 (폭 768px 이하)용 반응형 */
+@media (max-width: 768px) {
+header {
+    padding: 16px 20px;
+}
+
+header h1 {
+    font-size: 20px;
+}
+
+main {
+    margin-top: 24px;
+    padding: 0 12px;
+}
+
+.card {
+    padding: 18px 16px;
+    margin-bottom: 16px;
+}
+
+.card h2 {
+    font-size: 17px;
+}
+
+.row {
+    gap: 12px;
+}
+
+.inline-group {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.inline-group > button {
+    flex: 1 1 auto;
+}
+}
+
+/* 모바일 (폭 480px 이하) 최적화 */
+@media (max-width: 480px) {
+body {
+    font-size: 14px;
+}
+
+header {
+    padding: 14px 16px;
+}
+
+header h1 {
+    font-size: 18px;
+}
+
+main {
+    padding: 0 8px;
+    margin-bottom: 24px;
+    margin-top: 20px;
+}
+
+.card {
+    padding: 14px 12px;
+    margin-bottom: 12px;
+}
+
+.card h2 {
+    font-size: 16px;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+input[type="text"],
+textarea,
+select {
+    padding: 9px 10px;
+    font-size: 14px;
+}
+
+.row {
+    flex-direction: column;
+    gap: 8px;
+}
+
+.col-2 {
+    flex: 1 1 100%;
+}
+
+.inline-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.inline-group > button {
+    width: 100%;
+}
+
+button {
+    width: 100%;
+    justify-content: center;
+}
+
+.output-area {
+    min-height: 200px;
+    font-size: 11px;
+}
+
+.personality-slot {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.personality-slot button {
+    width: 100%;
+}
+
+.skill-preview {
+    font-size: 12px;
+}
+}
