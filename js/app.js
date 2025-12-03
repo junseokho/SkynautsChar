@@ -37,6 +37,9 @@ var cardModeStatus = document.getElementById("cardModeStatus");
 
 var magicSkillSelect = document.getElementById("magicSkillSelect");
 var magicSkillDesc = document.getElementById("magicSkillDesc");
+var magicSkillSelect2 = document.getElementById("magicSkillSelect2");
+var magicSkillSecondWrapper = document.getElementById("magicSkillSecondWrapper");
+var magicHint2 = document.getElementById("magicHint2");
 var raceFeatureDesc = document.getElementById("raceFeatureDesc");
 var raceSkillDesc = document.getElementById("raceSkillDesc");
 var extraRaceSkillDesc = document.getElementById("extraRaceSkillDesc");
@@ -241,57 +244,178 @@ function updateRaceDescriptions() {
 // ------------------------------
 
 function populateMagicSkills() {
-    magicSkills.forEach(function (name) {
-    var opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = name;
-    magicSkillSelect.appendChild(opt);
-    });
+  // 첫 번째 셀렉트 초기화
+  magicSkillSelect.innerHTML = "";
+  var optNone1 = document.createElement("option");
+  optNone1.value = "";
+  optNone1.textContent = "선택 안 함";
+  magicSkillSelect.appendChild(optNone1);
+
+  // 두 번째 셀렉트 초기화
+  if (magicSkillSelect2) {
+    magicSkillSelect2.innerHTML = "";
+    var optNone2 = document.createElement("option");
+    optNone2.value = "";
+    optNone2.textContent = "선택 안 함";
+    magicSkillSelect2.appendChild(optNone2);
+  }
+
+  // 공통 마법 스킬 목록 추가
+  magicSkills.forEach(function (name) {
+    var opt1 = document.createElement("option");
+    opt1.value = name;
+    opt1.textContent = name;
+    magicSkillSelect.appendChild(opt1);
+
+    if (magicSkillSelect2) {
+      var opt2 = document.createElement("option");
+      opt2.value = name;
+      opt2.textContent = name;
+      magicSkillSelect2.appendChild(opt2);
+    }
+  });
 }
 
+// 앤티크(기본 종족이거나 혼혈로 앤티크를 선택한 경우)인지 판정
+function hasAntiqueMagicRace() {
+  // 기본 종족이 앤티크인 경우
+  if (raceSelect.value === "앤티크") {
+    return true;
+  }
+
+  // 모던 타임즈 + 혼혈 + 추가 종족이 앤티크인 경우
+  if (
+    raceSelect.value === "모던 타임즈" &&
+    raceSkillSelect.value === "혼혈" &&
+    extraRaceSelect.value === "앤티크"
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+
+function requiredMagicSkillCount() {
+  var count = 0;
+
+  // 앤티크이거나, 모던 타임즈 혼혈로 앤티크를 추가 종족으로 가진 경우
+  if (hasAntiqueMagicRace()) {
+    count++;
+  }
+
+  // 개성 스킬 [경력] 마법사
+  if (hasPersonality("경력", "마법사")) {
+    count++;
+  }
+
+  return count; // 0, 1, 2
+}
+
+
 function needsMagicSkill() {
-    return raceSelect.value === "앤티크" || hasPersonality("경력", "마법사");
+  return requiredMagicSkillCount() > 0;
 }
 
 function isMagicUnlocked() {
-    return raceSelect.value === "앤티크" || hasPersonality("경력", "마법사");
+  // 현재 설계에서는 "선택 가능"과 "선택 의무"가 같으므로 그대로 사용
+  return needsMagicSkill();
 }
 
-function updateMagicUI() {
-    var magicHint = document.getElementById("magicHint");
-    var unlocked = isMagicUnlocked();
-    var needed = needsMagicSkill();
-    var selected = magicSkillSelect.value;
 
-    if (!unlocked) {
+function updateMagicUI() {
+  var magicHint = document.getElementById("magicHint");
+  var unlocked = isMagicUnlocked();
+  var requiredCount = requiredMagicSkillCount();
+  var selected1 = magicSkillSelect.value;
+  var selected2 = magicSkillSelect2 ? magicSkillSelect2.value : "";
+
+  if (!unlocked) {
+    // 전혀 선택할 수 없는 상태
     magicSkillSelect.disabled = true;
     magicSkillSelect.value = "";
+    if (magicSkillSelect2) {
+      magicSkillSelect2.disabled = true;
+      magicSkillSelect2.value = "";
+    }
+    if (magicSkillSecondWrapper) {
+      magicSkillSecondWrapper.style.display = "none";
+    }
+
     magicHint.classList.remove("danger");
     magicHint.classList.remove("success");
     magicHint.textContent =
-        "현재 설정에서는 마법 스킬을 선택할 수 없습니다. (앤티크 종족 또는 개성 스킬 [경력] 마법사가 필요)";
+      "현재 설정에서는 마법 스킬을 선택할 수 없습니다. (앤티크 종족 또는 개성 스킬 [경력] 마법사가 필요)";
+
     magicSkillDesc.textContent = "마법 스킬을 선택할 수 없는 상태입니다.";
-    } else {
-    magicSkillSelect.disabled = false;
-    if (needed) {
-        magicHint.classList.add("danger");
-        magicHint.classList.remove("success");
-        magicHint.textContent =
-        "현재 설정에서는 마법 스킬 1개를 반드시 선택해야 합니다. (앤티크 종족 또는 [경력] 마법사 보유)";
-    } else {
-        magicHint.classList.remove("danger");
-        magicHint.classList.add("success");
-        magicHint.textContent =
-        "마법 스킬을 선택할 수 있습니다. 1개를 선택하는 것을 권장합니다.";
+    return;
+  }
+
+  // 여기부터는 최소 1개는 선택 가능한 상태
+  magicSkillSelect.disabled = false;
+  if (requiredCount === 1) {
+    // 앤티크 또는 마법사 중 하나만 해당: 1개 필수
+    if (magicSkillSecondWrapper) {
+      magicSkillSecondWrapper.style.display = "none";
+    }
+    if (magicSkillSelect2) {
+      magicSkillSelect2.disabled = true;
+      magicSkillSelect2.value = "";
     }
 
-    if (selected) {
-        magicSkillDesc.textContent = getMagicDescription(selected);
-    } else {
-        magicSkillDesc.textContent = "마법 스킬을 선택하면 상세 설명이 표시됩니다.";
+    magicHint.classList.add("danger");
+    magicHint.classList.remove("success");
+    magicHint.textContent =
+      "현재 설정에서는 마법 스킬 1개를 반드시 선택해야 합니다. (앤티크 종족 또는 [경력] 마법사 보유)";
+  } else if (requiredCount === 2) {
+    // 앤티크 + 마법사 둘 다: 2개 필수
+    if (magicSkillSecondWrapper) {
+      magicSkillSecondWrapper.style.display = "block";
     }
+    if (magicSkillSelect2) {
+      magicSkillSelect2.disabled = false;
     }
+
+    magicHint.classList.add("danger");
+    magicHint.classList.remove("success");
+    magicHint.textContent =
+      "현재 설정에서는 서로 다른 마법 스킬 2개를 반드시 선택해야 합니다. (앤티크 + [경력] 마법사)";
+  } else {
+    // 이 경우는 거의 나오지 않지만, 혹시 모를 확장용
+    if (magicSkillSecondWrapper) {
+      magicSkillSecondWrapper.style.display = "none";
+    }
+    if (magicSkillSelect2) {
+      magicSkillSelect2.disabled = true;
+      magicSkillSelect2.value = "";
+    }
+
+    magicHint.classList.remove("danger");
+    magicHint.classList.add("success");
+    magicHint.textContent =
+      "마법 스킬을 선택할 수 있습니다. 1개를 선택하는 것을 권장합니다.";
+  }
+
+  // 설명 갱신: 선택된 마법 스킬들을 모두 보여 줌
+  var descLines = [];
+  if (selected1) {
+    descLines.push(
+      "1. " + selected1 + "\n" + getMagicDescription(selected1)
+    );
+  }
+  if (selected2) {
+    descLines.push(
+      "2. " + selected2 + "\n" + getMagicDescription(selected2)
+    );
+  }
+
+  if (descLines.length > 0) {
+    magicSkillDesc.textContent = descLines.join("\n\n");
+  } else {
+    magicSkillDesc.textContent = "마법 스킬을 선택하면 상세 설명이 표시됩니다.";
+  }
 }
+
 
 // ------------------------------
 // 특화/취약 관련
@@ -703,7 +827,8 @@ function sanitizeDescription(text) {
 function buildCommandsText() {
     var race = raceSelect.value;
     var raceSkill = raceSkillSelect.value;
-    var magicSkill = magicSkillSelect.value;
+    var magicSkill1 = magicSkillSelect.value;
+    var magicSkill2 = magicSkillSelect2 ? magicSkillSelect2.value : "";
     var explorerSkill = explorerSkillSelect.value;
     var extraRace = extraRaceSelect.value;
     var extraRaceSkill = extraRaceSkillSelect.value;
@@ -881,23 +1006,31 @@ function buildCommandsText() {
     lines.push("《개성 스킬 미선택》 타이밍: - | 효과: - | 횟수: -");
     }
 
-    if (magicSkill) {
+    if (magicSkill1 || magicSkill2) {
     lines.push("");
     lines.push("마법 스킬");
-    var mCmd = magicSkillCommands[magicSkill];
-    if (mCmd) {
-        lines.push(mCmd);
-    } else {
-        var mDesc = getMagicDescription(magicSkill);
+
+    function pushMagicLine(name) {
+        if (!name) return;
+        var cmd = magicSkillCommands[name];
+        if (cmd) {
+        lines.push(cmd);
+        } else {
+        var desc = getMagicDescription(name);
         lines.push(
-        "《" +
-            magicSkill +
+            "《" +
+            name +
             "》 타이밍: - | 효과: " +
-            sanitizeDescription(mDesc) +
+            sanitizeDescription(desc) +
             " | 횟수: -"
         );
+        }
     }
+
+    pushMagicLine(magicSkill1);
+    pushMagicLine(magicSkill2);
     }
+
 
     return lines.join("\n");
 }
@@ -1101,17 +1234,34 @@ function validateInputs() {
     return false;
     }
 
-    if (needsMagicSkill()) {
-    if (!magicSkillSelect.value) {
+    var requiredMagic = requiredMagicSkillCount();
+    var ms1 = magicSkillSelect.value;
+    var ms2 = magicSkillSelect2 ? magicSkillSelect2.value : "";
+
+    if (requiredMagic === 0) {
+    // 선택하면 안 되는 상태
+    if ((ms1 || ms2) && !isMagicUnlocked()) {
+        alert("현재 설정에서는 마법 스킬을 선택할 수 없습니다. 선택을 해제해 주세요.");
+        return false;
+    }
+    } else if (requiredMagic === 1) {
+    // 1개 필수
+    if (!ms1) {
         alert("현재 설정에서는 마법 스킬 1개를 반드시 선택해야 합니다.");
         return false;
     }
-    } else {
-    if (magicSkillSelect.value && !isMagicUnlocked()) {
-        alert("마법 스킬을 선택할 수 없는 상태입니다. 선택을 해제해 주세요.");
+    } else if (requiredMagic === 2) {
+    // 2개 필수 (서로 달라야 함)
+    if (!ms1 || !ms2) {
+        alert("현재 설정에서는 마법 스킬 2개를 반드시 선택해야 합니다.");
+        return false;
+    }
+    if (ms1 === ms2) {
+        alert("두 개의 마법 스킬은 서로 다른 스킬이어야 합니다.");
         return false;
     }
     }
+
 
     return true;
 }
@@ -1155,6 +1305,13 @@ extraRaceSkillSelect.addEventListener("change", function () {
 magicSkillSelect.addEventListener("change", function () {
     updateMagicUI();
 });
+
+if (magicSkillSelect2) {
+  magicSkillSelect2.addEventListener("change", function () {
+    updateMagicUI();
+  });
+}
+
 
 explorerSkillSelect.addEventListener("change", function () {
     updateExplorerDescription();
