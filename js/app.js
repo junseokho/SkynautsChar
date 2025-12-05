@@ -869,11 +869,11 @@ function buildCommandsText() {
     }
 
     if (specCount >= 1 && weakCount >= 1) {
-        return "3SN2";
+        return "3SN#2";
     } else if (specCount >= 1) {
         return "3SN";
     } else if (weakCount >= 1) {
-        return "SN2";
+        return "SN#2";
     } else {
         return "SN";
     }
